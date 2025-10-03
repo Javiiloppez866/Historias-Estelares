@@ -1,0 +1,458 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Historias Estelares</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@700;900&display=swap');
+        /* --- estilos originales sin cambios --- */
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { margin: 0; padding: 0; display: flex; justify-content: center; align-items: center; min-height: 100vh; background: #000; overflow: hidden; font-family: 'Orbitron', Arial, sans-serif; }
+        #canvas { position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); border: 2px solid #333; box-shadow: 0 0 50px rgba(255, 100, 0, 0.3); z-index: 1; }
+        #logo { position: fixed; top: 30px; left: 30px; width: 120px; height: auto; cursor: pointer; transition: transform 0.3s, filter 0.3s; filter: drop-shadow(0 0 20px rgba(255, 255, 255, 0.6)); z-index: 1000; }
+        #logo:hover { transform: scale(1.1); filter: drop-shadow(0 0 30px rgba(255, 255, 255, 0.9)); }
+        .screen { position: fixed; top: 0; left: 0; width: 100%; height: 100%; display: none; justify-content: center; align-items: center; z-index: 10; }
+        .screen.active { display: flex; }
+        #text-box { position: relative; background: rgba(0, 10, 30, 0.85); padding: 60px 80px; border: 3px solid rgba(100, 200, 255, 0.6); box-shadow: 0 0 30px rgba(0, 100, 255, 0.5); cursor: pointer; transition: all 0.3s; max-width: 1000px; }
+        #text-box:hover { transform: scale(1.05); box-shadow: 0 0 50px rgba(0, 150, 255, 0.8); border-color: rgba(150, 220, 255, 0.9); }
+        .title-main { font-size: 56px; font-weight: 900; text-align: center; margin-bottom: 20px; background: linear-gradient(90deg, #00D9FF, #FF6B9D, #FFC837, #00D9FF); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; text-shadow: 0 0 30px rgba(255, 100, 0, 0.5); }
+        .title-sub { font-size: 42px; font-weight: 700; text-align: center; margin-bottom: 10px; background: linear-gradient(90deg, #FFD700, #FF8C00, #FFD700); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
+        .title-sub2 { font-size: 38px; font-weight: 700; text-align: center; background: linear-gradient(90deg, #FFD700, #FF8C00, #FFD700); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
+        .characters-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 40px; padding: 40px; max-width: 1200px; }
+        .character-card { background: rgba(0, 10, 30, 0.9); border: 3px solid rgba(100, 200, 255, 0.4); border-radius: 20px; padding: 30px; cursor: pointer; transition: all 0.4s; text-align: center; position: relative; overflow: hidden; }
+        .character-card::before { content: ''; position: absolute; top: 0; left: -100%; width: 100%; height: 100%; background: linear-gradient(90deg, transparent, rgba(100, 200, 255, 0.3), transparent); transition: left 0.5s; }
+        .character-card:hover::before { left: 100%; }
+        .character-card:hover { transform: translateY(-10px) scale(1.05); border-color: rgba(150, 220, 255, 0.9); box-shadow: 0 20px 60px rgba(0, 150, 255, 0.6); }
+        .character-img { width: 200px; height: 200px; object-fit: cover; border-radius: 50%; margin-bottom: 20px; border: 4px solid rgba(100, 200, 255, 0.5); transition: all 0.3s; }
+        .character-card:hover .character-img { border-color: rgba(255, 200, 100, 0.9); transform: scale(1.1); box-shadow: 0 0 40px rgba(255, 200, 100, 0.6); }
+        .character-name { font-size: 32px; font-weight: 900; margin-bottom: 10px; background: linear-gradient(90deg, #00D9FF, #FF6B9D); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
+        .character-desc { font-size: 16px; color: rgba(255, 255, 255, 0.8); line-height: 1.6; }
+        .story-container { display: flex; gap: 40px; padding: 40px; max-width: 1400px; height: 80vh; align-items: stretch; }
+        .story-left { flex: 0 0 400px; display: flex; flex-direction: column; align-items: center; gap: 20px; }
+        .story-character-img { width: 100%; height: 400px; object-fit: cover; border-radius: 20px; border: 4px solid rgba(100, 200, 255, 0.6); box-shadow: 0 0 40px rgba(0, 150, 255, 0.5); }
+        .story-character-name { font-size: 36px; font-weight: 900; text-align: center; background: linear-gradient(90deg, #00D9FF, #FF6B9D); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
+        .story-right { flex: 1; display: flex; flex-direction: column; gap: 20px; }
+        .story-box { flex: 1; background: rgba(0, 10, 30, 0.9); border: 3px solid rgba(100, 200, 255, 0.6); border-radius: 20px; padding: 30px; overflow-y: auto; }
+        .story-title { font-size: 28px; font-weight: 700; margin-bottom: 20px; background: linear-gradient(90deg, #FFD700, #FF8C00); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
+        .story-text { font-size: 18px; line-height: 1.8; color: rgba(255, 255, 255, 0.9); cursor: pointer; }
+        .back-button { background: linear-gradient(135deg, #00D9FF, #0080FF); border: none; padding: 15px 40px; font-size: 20px; font-weight: 700; color: white; border-radius: 10px; cursor: pointer; transition: all 0.3s; font-family: 'Orbitron', Arial, sans-serif; box-shadow: 0 5px 20px rgba(0, 150, 255, 0.4); }
+        .back-button:hover { transform: translateY(-3px); box-shadow: 0 8px 30px rgba(0, 150, 255, 0.6); background: linear-gradient(135deg, #00F0FF, #0090FF); }
+    </style>
+</head>
+<body>
+    <canvas id="canvas"></canvas>
+    <a href="https://www.spaceappschallenge.org/2025/challenges/stellar-stories-space-weather-through-the-eyes-of-earthlings/?tab=details" target="_blank">
+        <img id="logo" src="https://upload.wikimedia.org/wikipedia/commons/e/e5/NASA_logo.svg" alt="NASA Logo">
+    </a>
+
+    <!-- Pantallas -->
+    <div id="intro-screen" class="screen active">
+        <div id="text-box">
+            <div class="title-main">STAR STORIES</div>
+            <div class="title-sub">Space weather through</div>
+            <div class="title-sub2">in the eyes of earthlings</div>
+        </div>
+    </div>
+
+    <div id="characters-screen" class="screen">
+        <div class="characters-grid">
+            <div class="character-card" data-character="astronaut" data-name="ASTRONAUTA" data-img="https://images.unsplash.com/photo-1446776653964-20c1d3a81b06?w=400&h=400&fit=crop">
+                <img class="character-img" src="https://images.unsplash.com/photo-1446776653964-20c1d3a81b06?w=400&h=400&fit=crop" alt="Astronauta">
+                <div class="character-name">ASTRONAUT</div>
+                <div class="character-desc">Cosmos explorer, direct witness to solar storms in space</div>
+            </div>
+            <div class="character-card" data-character="farmer" data-name="AGRICULTOR" data-img="https://images.unsplash.com/photo-1625246333195-78d9c38ad449?w=400&h=400&fit=crop">
+                <img class="character-img" src="https://images.unsplash.com/photo-1625246333195-78d9c38ad449?w=400&h=400&fit=crop" alt="Agricultor">
+                <div class="character-name">FARMER</div>
+                <div class="character-desc">Guardian of the earth, observer of how space weather affects crops</div>
+            </div>
+            <div class="character-card" data-character="scientist" data-name="CIENTÍFICO" data-img="https://images.unsplash.com/photo-1507413245164-6160d8298b31?w=400&h=400&fit=crop">
+                <img class="character-img" src="https://images.unsplash.com/photo-1507413245164-6160d8298b31?w=400&h=400&fit=crop" alt="Científico">
+                <div class="character-name">SCIENTIFIC</div>
+                <div class="character-desc">Universe researcher, unravelling the mysteries of space weather</div>
+            </div>
+            <div class="character-card" data-character="child" data-name="EXPLORADOR" data-img="https://images.unsplash.com/photo-1503454537195-1dcabb73ffb9?w=400&h=400&fit=crop">
+                <img class="character-img" src="https://images.unsplash.com/photo-1503454537195-1dcabb73ffb9?w=400&h=400&fit=crop" alt="Niño">
+                <div class="character-name">YOUNG PERSON</div>
+                <div class="character-desc">Young dreamer, discovering the wonders of space with curious eyes</div>
+            </div>
+        </div>
+    </div>
+
+    <div id="story-screen" class="screen">
+        <div class="story-container">
+            <div class="story-left">
+                <img id="story-char-img" class="story-character-img" src="" alt="Personaje">
+                <div id="story-char-name" class="story-character-name"></div>
+                <button class="back-button" id="back-btn">BACK TO CHARACTERS</button>
+            </div>
+            <div class="story-right">
+                <div class="story-box">
+                    <div class="story-title">Its History</div>
+                    <div id="story-content" class="story-text">
+                        Here you can write the story of this character and how they experience the space weather...
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+   <script >
+
+    // Canvas y configuración
+const canvas = document.getElementById('canvas');
+const ctx = canvas.getContext('2d');
+canvas.width = 1920;
+canvas.height = 1080;
+
+// Historias individuales por personaje
+const historias = {
+    astronaut: "Aquí .",
+
+    farmer: `My name is Julián Ortega. I am 47 years old, have two children and a small farm in the central highlands. All my life I have grown fruit and vegetables: tomatoes, lettuce, sweetcorn. I learned to farm by watching my father, but over the years, agriculture has changed. Now everything is controlled by humidity sensors, automated irrigation systems, drones for spraying, and GPS for measuring the land.
+                I adapted too. I couldn't fall behind. I bought a smart irrigation system connected to a satellite, used digital weather forecasts, and programmed everything from a tablet.
+                And for a while, it worked. My harvests were more efficient, my work lighter. Until the solar storm hit.
+                It was October, just like now. The sunrise was tinged with a strange reddish colour, as if the sky were silently burning. I didn't think much of it. I thought it was a beautiful sunrise. But at noon, my phone sounded an alert:
+                 G4 geomagnetic storm. Potential impact on electrical networks and GPS systems. Source: NASA Space Weather Prediction Centre.
+                I didn't quite understand. 'That'll be up there,' I thought. 'In the satellites, in the rockets, not here in the countryside.' But within hours, everything stopped. The irrigation system stopped working, the weather station wasn't transmitting data, the tractor's GPS was out of sync, I tried to reconnect it and nothing.
+                The solar-powered water pump began to fail. The electric inverters shut down intermittently.
+                In the afternoon, the sky was covered with green and violet lights, a beautiful aurora borealis. But it was also a reminder that something was wrong.
+                On the third day, the plants began to suffer. Without irrigation, the soil hardened. The leaves withered. Some sensors were burned out by electrical surges. I tried to do it manually, with buckets and hoses, but the farm is large. You can't water everything by hand. The tomatoes cracked, the lettuce burned. Months of effort were lost under an unrelenting sun. Meanwhile, at home, things weren't going well either. Without stable electricity, food was spoiling. My daughter couldn't attend virtual classes. The bank called about the debt for the new equipment. There was nothing to do but wait for the Sun to calm down, then I read the NASA reports.
+                A coronal mass ejection had reached Earth. A cloud of charged particles hit the planet's magnetic field, disrupting electrical networks, GPS signals, and satellites.
+                Experts called it 'an extreme but not unusual event.' They said it could happen again. That the Sun was entering its solar maximum, a natural cycle of high activity that occurs every 11 years.
+                For them, it was technical data. For me, it was the end of a harvest, the end of a season, almost the end of my farm.
+                Today, months later, I continue to salvage what I can. I have gone back to basics, to the beginning: manual irrigation, observing the sky, intuition. But nothing is the same anymore.
+                I live with the uncertainty that, far from here, an invisible storm could destroy my work in seconds.
+                I look at the sun and I don't know whether to thank it or fear it. I know that without it there would be no life. But I also know that when it rages, those of us who live off the land pay the price. And in this new world, where everything depends on technology and an unpredictable sky, farmers like me no longer fear only drought or rain...
+                Now we also fear the sun.`,
+
+    scientist: `Hello, I'm Lukas Heinemann, a space weather scientist in Potsdam, Germany. My job is to study how the Sun influences our planet. Sometimes it gives us light and heat, but other times... it throws storms at us.
+                On 10 May 2024, NASA and ESA warned of something unusual:
+                'G5 geomagnetic storm on its way, caused by sunspot AR3664.'
+                We knew that a coronal mass ejection (CME) was coming towards Earth, but I never imagined what I was going to see. That night, the sky above Berlin lit up with green, pink and violet lights dancing and shining above the rooftops. 
+                'Dad, the sky is dancing!' my children shouted.
+                Yes... it was the Northern Lights, something almost impossible in Germany, but at the same time, GPS systems were failing, satellites were out of sync, and power grids in the north were experiencing fluctuations.
+                Even farmers in Bavaria had to water by hand. Their automatic systems stopped working. The Sun, beautiful and powerful, was touching the Earth's magnetic field. For three days, the auroras were seen as far away as France, Italy and Spain, and when everything returned to normal, I understood something:
+                We can observe the Sun, but we cannot control it, and every time the sun rises, I remember that day when the Sun danced over Germany and taught us to respect its power.`
+};
+
+// Elementos de nebulosa
+const nebula = [];
+for (let i = 0; i < 150; i++) {
+    nebula.push({
+        x: Math.random() * canvas.width,
+        y: Math.random() * canvas.height,
+        size: Math.random() * 3 + 1,
+        speedX: (Math.random() - 0.5) * 0.3,
+        speedY: (Math.random() - 0.5) * 0.3,
+        color: Math.random() > 0.5 ? 'rgba(100, 150, 255, ' : 'rgba(150, 100, 255, ',
+        opacity: Math.random() * 0.3 + 0.2
+    });
+}
+
+// Estrellas
+const stars = [];
+for (let i = 0; i < 300; i++) {
+    stars.push({
+        x: Math.random() * canvas.width,
+        y: Math.random() * canvas.height,
+        radius: Math.random() * 2,
+        opacity: Math.random() * 0.8 + 0.2,
+        twinkleSpeed: Math.random() * 0.02 + 0.01,
+        twinklePhase: Math.random() * Math.PI * 2
+    });
+}
+
+// Meteoritos
+const meteorites = [];
+for (let i = 0; i < 12; i++) {
+    meteorites.push({
+        x: Math.random() * canvas.width * 0.6,
+        y: -Math.random() * 400 - 100,
+        size: Math.random() * 25 + 10,
+        speed: Math.random() * 5 + 3,
+        angle: Math.random() * 0.4 + 0.3,
+        rotation: Math.random() * Math.PI * 2,
+        rotationSpeed: (Math.random() - 0.5) * 0.15,
+        color: Math.random()
+    });
+}
+
+let startTime = Date.now();
+let time = 0;
+
+// Función para dibujar el sol
+function drawSun() {
+    const sunX = canvas.width;
+    const sunY = canvas.height / 2;
+    const sunRadius = 500;
+    
+    // Resplandor del sol
+    for (let i = 5; i > 0; i--) {
+        const gradient = ctx.createRadialGradient(sunX, sunY, 0, sunX, sunY, sunRadius * (i * 0.4));
+        gradient.addColorStop(0, `rgba(255, 255, 200, ${0.15 * i})`);
+        gradient.addColorStop(0.3, `rgba(255, 220, 100, ${0.1 * i})`);
+        gradient.addColorStop(0.6, `rgba(255, 150, 50, ${0.05 * i})`);
+        gradient.addColorStop(1, 'rgba(255, 100, 0, 0)');
+        
+        ctx.fillStyle = gradient;
+        ctx.fillRect(sunX - sunRadius * 2, sunY - sunRadius * 2, sunRadius * 2, sunRadius * 4);
+    }
+    
+    // Corona solar
+    ctx.save();
+    ctx.translate(sunX, sunY);
+    for (let i = 0; i < 12; i++) {
+        const angle = (i / 12) * Math.PI * 2 + time * 0.001;
+        ctx.rotate(Math.PI / 6);
+        
+        const coronaGrad = ctx.createRadialGradient(0, 0, sunRadius * 0.6, 0, 0, sunRadius * 1.2);
+        coronaGrad.addColorStop(0, 'rgba(255, 200, 100, 0.3)');
+        coronaGrad.addColorStop(0.5, 'rgba(255, 150, 50, 0.15)');
+        coronaGrad.addColorStop(1, 'rgba(255, 100, 0, 0)');
+        
+        ctx.fillStyle = coronaGrad;
+        ctx.beginPath();
+        ctx.moveTo(0, 0);
+        ctx.lineTo(sunRadius * 1.5, -sunRadius * 0.3);
+        ctx.lineTo(sunRadius * 1.5, sunRadius * 0.3);
+        ctx.closePath();
+        ctx.fill();
+    }
+    ctx.restore();
+    
+    // Cuerpo del sol
+    const sunGradient = ctx.createRadialGradient(sunX - sunRadius * 0.2, sunY - sunRadius * 0.2, 0, sunX, sunY, sunRadius);
+    sunGradient.addColorStop(0, '#FFFEF0');
+    sunGradient.addColorStop(0.3, '#FFF4D0');
+    sunGradient.addColorStop(0.5, '#FFD700');
+    sunGradient.addColorStop(0.7, '#FFA500');
+    sunGradient.addColorStop(0.9, '#FF8C00');
+    sunGradient.addColorStop(1, '#FF6600');
+    
+    ctx.fillStyle = sunGradient;
+    ctx.beginPath();
+    ctx.arc(sunX, sunY, sunRadius, 0, Math.PI * 2);
+    ctx.fill();
+    
+    // Manchas solares
+    ctx.fillStyle = 'rgba(200, 100, 0, 0.3)';
+    for (let i = 0; i < 8; i++) {
+        const spotAngle = (i / 8) * Math.PI * 2 + time * 0.0005;
+        const spotDist = sunRadius * (0.3 + Math.sin(time * 0.001 + i) * 0.2);
+        const spotX = sunX + Math.cos(spotAngle) * spotDist;
+        const spotY = sunY + Math.sin(spotAngle) * spotDist;
+        const spotSize = 20 + Math.sin(time * 0.002 + i) * 10;
+        
+        ctx.beginPath();
+        ctx.arc(spotX, spotY, spotSize, 0, Math.PI * 2);
+        ctx.fill();
+    }
+}
+
+// Función para dibujar la nebulosa
+function drawNebula() {
+    nebula.forEach(n => {
+        ctx.fillStyle = n.color + n.opacity + ')';
+        ctx.beginPath();
+        ctx.arc(n.x, n.y, n.size, 0, Math.PI * 2);
+        ctx.fill();
+        
+        n.x += n.speedX;
+        n.y += n.speedY;
+        
+        if (n.x < 0) n.x = canvas.width;
+        if (n.x > canvas.width) n.x = 0;
+        if (n.y < 0) n.y = canvas.height;
+        if (n.y > canvas.height) n.y = 0;
+    });
+}
+
+// Función para dibujar las estrellas
+function drawStars() {
+    stars.forEach(star => {
+        star.twinklePhase += star.twinkleSpeed;
+        const twinkle = Math.sin(star.twinklePhase) * 0.3 + 0.7;
+        
+        ctx.fillStyle = `rgba(255, 255, 255, ${star.opacity * twinkle})`;
+        ctx.beginPath();
+        ctx.arc(star.x, star.y, star.radius, 0, Math.PI * 2);
+        ctx.fill();
+        
+        if (star.radius > 1.5) {
+            ctx.fillStyle = `rgba(255, 255, 255, ${star.opacity * twinkle * 0.5})`;
+            ctx.beginPath();
+            ctx.arc(star.x, star.y, star.radius * 2, 0, Math.PI * 2);
+            ctx.fill();
+        }
+    });
+}
+
+// Función para dibujar meteoritos
+function drawMeteorite(met) {
+    ctx.save();
+    ctx.translate(met.x, met.y);
+    ctx.rotate(met.rotation);
+    
+    const meteorGrad = ctx.createRadialGradient(-met.size * 0.3, -met.size * 0.3, 0, 0, 0, met.size);
+    if (met.color > 0.5) {
+        meteorGrad.addColorStop(0, '#A0826D');
+        meteorGrad.addColorStop(0.5, '#6B5445');
+        meteorGrad.addColorStop(1, '#3E2723');
+    } else {
+        meteorGrad.addColorStop(0, '#8B7D6B');
+        meteorGrad.addColorStop(0.5, '#5C5147');
+        meteorGrad.addColorStop(1, '#2E2620');
+    }
+    
+    ctx.fillStyle = meteorGrad;
+    ctx.beginPath();
+    ctx.arc(0, 0, met.size, 0, Math.PI * 2);
+    ctx.fill();
+    
+    ctx.fillStyle = 'rgba(0, 0, 0, 0.4)';
+    for (let i = 0; i < 3; i++) {
+        ctx.beginPath();
+        ctx.arc(
+            (Math.sin(i) * met.size * 0.3),
+            (Math.cos(i) * met.size * 0.3),
+            met.size * 0.15,
+            0, Math.PI * 2
+        );
+        ctx.fill();
+    }
+    
+    ctx.restore();
+    
+    // Estela del meteorito
+    const trailLength = 80;
+    for (let i = 0; i < 3; i++) {
+        const offset = i * 8;
+        const trailGrad = ctx.createLinearGradient(
+            met.x, met.y,
+            met.x - Math.cos(met.angle) * (trailLength + offset),
+            met.y - Math.sin(met.angle) * (trailLength + offset)
+        );
+        
+        if (i === 0) {
+            trailGrad.addColorStop(0, 'rgba(255, 255, 200, 0.9)');
+            trailGrad.addColorStop(0.3, 'rgba(255, 200, 100, 0.7)');
+        } else if (i === 1) {
+            trailGrad.addColorStop(0, 'rgba(255, 180, 100, 0.7)');
+            trailGrad.addColorStop(0.3, 'rgba(255, 120, 50, 0.5)');
+        } else {
+            trailGrad.addColorStop(0, 'rgba(255, 100, 50, 0.5)');
+            trailGrad.addColorStop(0.3, 'rgba(255, 50, 0, 0.3)');
+        }
+        trailGrad.addColorStop(1, 'rgba(255, 0, 0, 0)');
+        
+        ctx.strokeStyle = trailGrad;
+        ctx.lineWidth = met.size * (1.2 - i * 0.3);
+        ctx.lineCap = 'round';
+        ctx.beginPath();
+        ctx.moveTo(met.x, met.y);
+        ctx.lineTo(
+            met.x - Math.cos(met.angle) * (trailLength + offset),
+            met.y - Math.sin(met.angle) * (trailLength + offset)
+        );
+        ctx.stroke();
+    }
+    
+    // Partículas de la estela
+    for (let i = 0; i < 5; i++) {
+        const dist = Math.random() * trailLength;
+        const px = met.x - Math.cos(met.angle) * dist + (Math.random() - 0.5) * 15;
+        const py = met.y - Math.sin(met.angle) * dist + (Math.random() - 0.5) * 15;
+        
+        ctx.fillStyle = `rgba(255, ${150 + Math.random() * 100}, 0, ${Math.random() * 0.6})`;
+        ctx.beginPath();
+        ctx.arc(px, py, Math.random() * 3 + 1, 0, Math.PI * 2);
+        ctx.fill();
+    }
+}
+
+// Función de animación principal
+function animate() {
+    time = Date.now() - startTime;
+    
+    // Fondo degradado
+    const bgGrad = ctx.createRadialGradient(canvas.width / 2, canvas.height / 2, 0, canvas.width / 2, canvas.height / 2, canvas.width);
+    bgGrad.addColorStop(0, '#0a0a2e');
+    bgGrad.addColorStop(0.5, '#050515');
+    bgGrad.addColorStop(1, '#000000');
+    ctx.fillStyle = bgGrad;
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
+    
+    drawNebula();
+    drawStars();
+    drawSun();
+    
+    // Actualizar y dibujar meteoritos
+    meteorites.forEach(met => {
+        met.x += Math.cos(met.angle) * met.speed;
+        met.y += Math.sin(met.angle) * met.speed;
+        met.rotation += met.rotationSpeed;
+        
+        if (met.x > canvas.width * 0.7 || met.y > canvas.height + 100) {
+            met.x = Math.random() * canvas.width * 0.3;
+            met.y = -Math.random() * 300 - 100;
+            met.rotation = Math.random() * Math.PI * 2;
+        }
+        
+        drawMeteorite(met);
+    });
+    
+    requestAnimationFrame(animate);
+}
+
+// Navegación entre pantallas
+const introScreen = document.getElementById('intro-screen');
+const charactersScreen = document.getElementById('characters-screen');
+const storyScreen = document.getElementById('story-screen');
+const textBox = document.getElementById('text-box');
+
+textBox.addEventListener('click', () => {
+    introScreen.classList.remove('active');
+    charactersScreen.classList.add('active');
+});
+
+// Event listeners para los personajes
+const characterCards = document.querySelectorAll('.character-card');
+characterCards.forEach(card => {
+    card.addEventListener('click', () => {
+        const charKey = card.getAttribute('data-character');
+        const charName = card.getAttribute('data-name');
+        const charImg = card.getAttribute('data-img');
+
+        document.getElementById('story-char-name').textContent = charName;
+        document.getElementById('story-char-img').src = charImg;
+        document.getElementById('story-content').textContent = historias[charKey];
+        document.getElementById('story-content').setAttribute('data-current', charKey);
+
+        charactersScreen.classList.remove('active');
+        storyScreen.classList.add('active');
+    });
+});
+
+// Botón de volver
+document.getElementById('back-btn').addEventListener('click', () => {
+    storyScreen.classList.remove('active');
+    charactersScreen.classList.add('active');
+});
+
+// Editar historia al hacer clic
+document.getElementById('story-content').addEventListener('click', () => {
+    const currentChar = document.getElementById('story-content').getAttribute('data-current');
+    const nuevaHistoria = prompt("Escribe la nueva historia para " + currentChar.toUpperCase(), historias[currentChar]);
+    if (nuevaHistoria !== null) {
+        historias[currentChar] = nuevaHistoria;
+        document.getElementById('story-content').textContent = nuevaHistoria;
+    }
+});
+
+// Iniciar animación
+animate();
+   </script>
+</body>
+</html>
