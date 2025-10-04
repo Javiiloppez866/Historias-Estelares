@@ -48,19 +48,14 @@ const historias = {
                 We can observe the Sun, but we cannot control it, and every time the sun rises, I remember that day when the Sun danced over Germany and taught us to respect its power.`,
 
 
-    kid: ``
+    kid: `My name is Leo, I'm eighteen years old, and what I'm experiencing is something I never imagined I would feel. This morning started like any other, but when I stepped out onto the balcony, the air seemed thick and heavy, as if something was approaching without warning.
+        It wasn't long before I felt a tingling sensation on my skin that made me shiver. The sky was clearer than usual, as if the atmosphere had thinned. And that's when I saw the green and violet lights dancing on the edge between the clouds and the air. It was an aurora, but where it's not usually seen.
+        At that moment, my phone turned off. The lights in the house flickered and then went out for a few moments. An electrical hum filled the air. I felt that I was no longer on safe ground.
+        I later found out that it was space weather that was affecting me: storms of charged particles, solar wind, solar flares, and massive plasma ejections from the Sun. If they reach our Earth, the planet's magnetic shield should defend us. But sometimes some particles slip through. 
+        My head hurts at times, and I feel dizzy at times, although the dizziness then dissolves into curiosity. I feel vulnerable, but I'm not entirely scared.
+        I don't know how long this state will last. Maybe a few more hours, maybe days. What I have learned is that the Earth's magnetic field, atmosphere, and layers are responsible for filtering radiation.`
 
 };
-
-// Botón Saber más → abre la URL en nueva pestaña
-const linkButtons = document.querySelectorAll('.story-link-btn');
-
-linkButtons.forEach(btn => {
-    btn.addEventListener('click', () => {
-        const url = btn.getAttribute('data-url');
-        window.open(url, '_blank');
-    });
-});
 
 // Botón de volver atrás
 document.getElementById('back-to-intro-btn').addEventListener('click', () => {
