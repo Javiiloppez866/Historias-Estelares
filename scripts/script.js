@@ -369,15 +369,5 @@ document.getElementById('back-btn').addEventListener('click', () => {
     charactersScreen.classList.add('active');
 });
     
-// Editar historia al hacer clic
-document.getElementById('story-content').addEventListener('click', () => {
-    const currentChar = document.getElementById('story-content').getAttribute('data-current');
-    const nuevaHistoria = prompt("Escribe la nueva historia para " + currentChar.toUpperCase(), historias[currentChar]);
-    if (nuevaHistoria !== null) {
-            historias[currentChar] = nuevaHistoria;
-            document.getElementById('story-content').textContent = nuevaHistoria;
-    }
-});
-    
 // Iniciar animación
 animate();
