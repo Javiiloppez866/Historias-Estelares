@@ -4,63 +4,73 @@ const ctx = canvas.getContext('2d');
 canvas.width = 1920;
 canvas.height = 1080;
     
-    // Historias individuales por personaje
-    const historias = {
-        astronaut: "Aquí .",
+// Historias individuales por personaje.
+
+const historias = {
     
-        farmer: `My name is Julián Ortega. I am 47 years old, have two children and a small farm in the central highlands. All my life I have grown fruit and vegetables: tomatoes, lettuce, sweetcorn. I learned to farm by watching my father, but over the years, agriculture has changed. Now everything is controlled by humidity sensors, automated irrigation systems, drones for spraying, and GPS for measuring the land.
-                    I adapted too. I couldn't fall behind. I bought a smart irrigation system connected to a satellite, used digital weather forecasts, and programmed everything from a tablet.
-                    And for a while, it worked. My harvests were more efficient, my work lighter. Until the solar storm hit.
-                    It was October, just like now. The sunrise was tinged with a strange reddish colour, as if the sky were silently burning. I didn't think much of it. I thought it was a beautiful sunrise. But at noon, my phone sounded an alert:
-                    G4 geomagnetic storm. Potential impact on electrical networks and GPS systems. Source: NASA Space Weather Prediction Centre.
-                    I didn't quite understand. 'That'll be up there,' I thought. 'In the satellites, in the rockets, not here in the countryside.' But within hours, everything stopped. The irrigation system stopped working, the weather station wasn't transmitting data, the tractor's GPS was out of sync, I tried to reconnect it and nothing.
-                    The solar-powered water pump began to fail. The electric inverters shut down intermittently.
-                    In the afternoon, the sky was covered with green and violet lights, a beautiful aurora borealis. But it was also a reminder that something was wrong.
-                    On the third day, the plants began to suffer. Without irrigation, the soil hardened. The leaves withered. Some sensors were burned out by electrical surges. I tried to do it manually, with buckets and hoses, but the farm is large. You can't water everything by hand. The tomatoes cracked, the lettuce burned. Months of effort were lost under an unrelenting sun. Meanwhile, at home, things weren't going well either. Without stable electricity, food was spoiling. My daughter couldn't attend virtual classes. The bank called about the debt for the new equipment. There was nothing to do but wait for the Sun to calm down, then I read the NASA reports.
-                    A coronal mass ejection had reached Earth. A cloud of charged particles hit the planet's magnetic field, disrupting electrical networks, GPS signals, and satellites.
-                    Experts called it 'an extreme but not unusual event.' They said it could happen again. That the Sun was entering its solar maximum, a natural cycle of high activity that occurs every 11 years.
-                    For them, it was technical data. For me, it was the end of a harvest, the end of a season, almost the end of my farm.
-                    Today, months later, I continue to salvage what I can. I have gone back to basics, to the beginning: manual irrigation, observing the sky, intuition. But nothing is the same anymore.
-                    I live with the uncertainty that, far from here, an invisible storm could destroy my work in seconds.
-                    I look at the sun and I don't know whether to thank it or fear it. I know that without it there would be no life. But I also know that when it rages, those of us who live off the land pay the price. And in this new world, where everything depends on technology and an unpredictable sky, farmers like me no longer fear only drought or rain...
-                    Now we also fear the sun.`,
+    astronaut: "Aquí .",
     
-        scientist: `Hello, I'm Lukas Heinemann, a space weather scientist in Potsdam, Germany. My job is to study how the Sun influences our planet. Sometimes it gives us light and heat, but other times... it throws storms at us.
-                    On 10 May 2024, NASA and ESA warned of something unusual:
-                    'G5 geomagnetic storm on its way, caused by sunspot AR3664.'
-                    We knew that a coronal mass ejection (CME) was coming towards Earth, but I never imagined what I was going to see. That night, the sky above Berlin lit up with green, pink and violet lights dancing and shining above the rooftops. 
-                    'Dad, the sky is dancing!' my children shouted.
-                    Yes... it was the Northern Lights, something almost impossible in Germany, but at the same time, GPS systems were failing, satellites were out of sync, and power grids in the north were experiencing fluctuations.
-                    Even farmers in Bavaria had to water by hand. Their automatic systems stopped working. The Sun, beautiful and powerful, was touching the Earth's magnetic field. For three days, the auroras were seen as far away as France, Italy and Spain, and when everything returned to normal, I understood something:
-                    We can observe the Sun, but we cannot control it, and every time the sun rises, I remember that day when the Sun danced over Germany and taught us to respect its power.`
-    };
+    farmer: `My name is Julián Ortega. I am 47 years old, have two children and a small farm in the central highlands. All my life I have grown fruit and vegetables: tomatoes, lettuce, sweetcorn. I learned to farm by watching my father, but over the years, agriculture has changed. Now everything is controlled by humidity sensors, automated irrigation systems, drones for spraying, and GPS for measuring the land.
+            I adapted too. I couldn't fall behind. I bought a smart irrigation system connected to a satellite, used digital weather forecasts, and programmed everything from a tablet.
+            And for a while, it worked. My harvests were more efficient, my work lighter. Until the solar storm hit.
+            It was October, just like now. The sunrise was tinged with a strange reddish colour, as if the sky were silently burning. I didn't think much of it. I thought it was a beautiful sunrise. But at noon, my phone sounded an alert:
+            G4 geomagnetic storm. Potential impact on electrical networks and GPS systems. Source: NASA Space Weather Prediction Centre.
+            I didn't quite understand. 'That'll be up there,' I thought. 'In the satellites, in the rockets, not here in the countryside.' But within hours, everything stopped. The irrigation system stopped working, the weather station wasn't transmitting data, the tractor's GPS was out of sync, I tried to reconnect it and nothing.
+            The solar-powered water pump began to fail. The electric inverters shut down intermittently.
+            In the afternoon, the sky was covered with green and violet lights, a beautiful aurora borealis. But it was also a reminder that something was wrong.
+            On the third day, the plants began to suffer. Without irrigation, the soil hardened. The leaves withered. Some sensors were burned out by electrical surges. I tried to do it manually, with buckets and hoses, but the farm is large. You can't water everything by hand. The tomatoes cracked, the lettuce burned. Months of effort were lost under an unrelenting sun. Meanwhile, at home, things weren't going well either. Without stable electricity, food was spoiling. My daughter couldn't attend virtual classes. The bank called about the debt for the new equipment. There was nothing to do but wait for the Sun to calm down, then I read the NASA reports.
+            A coronal mass ejection had reached Earth. A cloud of charged particles hit the planet's magnetic field, disrupting electrical networks, GPS signals, and satellites.
+            Experts called it 'an extreme but not unusual event.' They said it could happen again. That the Sun was entering its solar maximum, a natural cycle of high activity that occurs every 11 years.
+            For them, it was technical data. For me, it was the end of a harvest, the end of a season, almost the end of my farm.
+            Today, months later, I continue to salvage what I can. I have gone back to basics, to the beginning: manual irrigation, observing the sky, intuition. But nothing is the same anymore.
+            I live with the uncertainty that, far from here, an invisible storm could destroy my work in seconds.
+            I look at the sun and I don't know whether to thank it or fear it. I know that without it there would be no life. But I also know that when it rages, those of us who live off the land pay the price. And in this new world, where everything depends on technology and an unpredictable sky, farmers like me no longer fear only drought or rain...
+            Now we also fear the sun.` ,
     
-    // Elementos de nebulosa
-    const nebula = [];
-    for (let i = 0; i < 150; i++) {
-        nebula.push({
-            x: Math.random() * canvas.width,
-            y: Math.random() * canvas.height,
-            size: Math.random() * 3 + 1,
-            speedX: (Math.random() - 0.5) * 0.3,
-            speedY: (Math.random() - 0.5) * 0.3,
-            color: Math.random() > 0.5 ? 'rgba(100, 150, 255, ' : 'rgba(150, 100, 255, ',
-            opacity: Math.random() * 0.3 + 0.2
-        });
-    }
+    scientist: `Hello, I'm Lukas Heinemann, a space weather scientist in Potsdam, Germany. My job is to study how the Sun influences our planet. Sometimes it gives us light and heat, but other times... it throws storms at us.
+                On 10 May 2024, NASA and ESA warned of something unusual:
+                'G5 geomagnetic storm on its way, caused by sunspot AR3664.'
+                We knew that a coronal mass ejection (CME) was coming towards Earth, but I never imagined what I was going to see. That night, the sky above Berlin lit up with green, pink and violet lights dancing and shining above the rooftops. 
+                'Dad, the sky is dancing!' my children shouted.
+                Yes... it was the Northern Lights, something almost impossible in Germany, but at the same time, GPS systems were failing, satellites were out of sync, and power grids in the north were experiencing fluctuations.
+                Even farmers in Bavaria had to water by hand. Their automatic systems stopped working. The Sun, beautiful and powerful, was touching the Earth's magnetic field. For three days, the auroras were seen as far away as France, Italy and Spain, and when everything returned to normal, I understood something:
+                We can observe the Sun, but we cannot control it, and every time the sun rises, I remember that day when the Sun danced over Germany and taught us to respect its power.`
+};
+
+// Botón de volver atrás
+document.getElementById('back-to-intro-btn').addEventListener('click', () => {
+    document.getElementById('characters-screen').classList.remove('active');
+    document.getElementById('intro-screen').classList.add('active');
+});
+
+
+// Elementos de nebulosa
+const nebula = [];
+for (let i = 0; i < 150; i++) {
+    nebula.push({
+        x: Math.random() * canvas.width,
+        y: Math.random() * canvas.height,
+        size: Math.random() * 3 + 1,
+        speedX: (Math.random() - 0.5) * 0.3,
+        speedY: (Math.random() - 0.5) * 0.3,
+        color: Math.random() > 0.5 ? 'rgba(100, 150, 255, ' : 'rgba(150, 100, 255, ',
+        opacity: Math.random() * 0.3 + 0.2
+    });
+}
     
-    // Estrellas
-    const stars = [];
-    for (let i = 0; i < 300; i++) {
-        stars.push({
-            x: Math.random() * canvas.width,
-            y: Math.random() * canvas.height,
-            radius: Math.random() * 2,
-            opacity: Math.random() * 0.8 + 0.2,
-            twinkleSpeed: Math.random() * 0.02 + 0.01,
-            twinklePhase: Math.random() * Math.PI * 2
-        });
-    }
+// Estrellas
+const stars = [];
+for (let i = 0; i < 300; i++) {
+    stars.push({
+        x: Math.random() * canvas.width,
+        y: Math.random() * canvas.height,
+        radius: Math.random() * 2,
+        opacity: Math.random() * 0.8 + 0.2,
+        twinkleSpeed: Math.random() * 0.02 + 0.01,
+        twinklePhase: Math.random() * Math.PI * 2
+        
+    });
+}
     
     // Meteoritos
     const meteorites = [];

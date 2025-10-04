@@ -191,6 +191,13 @@ body {
     line-height: 1.6;
 }
 
+.back-to-intro {
+    position: absolute;   /* lo sacamos del flujo normal */
+    bottom: 30px;            /* distancia desde arriba, ajustable */
+    left: 40px;           /* distancia desde la izquierda */
+    z-index: 20;          /* aseguramos que esté por encima del contenido */
+}
+
 /* === STORY SECTION === */
 .story-container {
     display: flex;
