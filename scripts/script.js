@@ -100,292 +100,292 @@ for (let i = 0; i < 300; i++) {
     });
 }
     
-    // Meteoritos
-    const meteorites = [];
+// Meteoritos
+const meteorites = [];
+for (let i = 0; i < 12; i++) {
+    meteorites.push({
+        x: Math.random() * canvas.width * 0.6,
+        y: -Math.random() * 400 - 100,
+        size: Math.random() * 25 + 10,
+        speed: Math.random() * 5 + 3,
+        angle: Math.random() * 0.4 + 0.3,
+        rotation: Math.random() * Math.PI * 2,
+        rotationSpeed: (Math.random() - 0.5) * 0.15,
+        color: Math.random()
+    });
+}
+    
+let startTime = Date.now();
+let time = 0;
+    
+// Función para dibujar el sol
+function drawSun() {
+    const sunX = canvas.width;
+    const sunY = canvas.height / 2;
+    const sunRadius = 500;
+        
+// Resplandor del sol
+for (let i = 5; i > 0; i--) {
+    const gradient = ctx.createRadialGradient(sunX, sunY, 0, sunX, sunY, sunRadius * (i * 0.4));
+    gradient.addColorStop(0, `rgba(255, 255, 200, ${0.15 * i})`);
+    gradient.addColorStop(0.3, `rgba(255, 220, 100, ${0.1 * i})`);
+    gradient.addColorStop(0.6, `rgba(255, 150, 50, ${0.05 * i})`);
+    gradient.addColorStop(1, 'rgba(255, 100, 0, 0)');
+            
+    ctx.fillStyle = gradient;
+    ctx.fillRect(sunX - sunRadius * 2, sunY - sunRadius * 2, sunRadius * 2, sunRadius * 4);
+}
+        
+// Corona solar
+    ctx.save();
+    ctx.translate(sunX, sunY);
     for (let i = 0; i < 12; i++) {
-        meteorites.push({
-            x: Math.random() * canvas.width * 0.6,
-            y: -Math.random() * 400 - 100,
-            size: Math.random() * 25 + 10,
-            speed: Math.random() * 5 + 3,
-            angle: Math.random() * 0.4 + 0.3,
-            rotation: Math.random() * Math.PI * 2,
-            rotationSpeed: (Math.random() - 0.5) * 0.15,
-            color: Math.random()
-        });
-    }
-    
-    let startTime = Date.now();
-    let time = 0;
-    
-    // Función para dibujar el sol
-    function drawSun() {
-        const sunX = canvas.width;
-        const sunY = canvas.height / 2;
-        const sunRadius = 500;
-        
-        // Resplandor del sol
-        for (let i = 5; i > 0; i--) {
-            const gradient = ctx.createRadialGradient(sunX, sunY, 0, sunX, sunY, sunRadius * (i * 0.4));
-            gradient.addColorStop(0, `rgba(255, 255, 200, ${0.15 * i})`);
-            gradient.addColorStop(0.3, `rgba(255, 220, 100, ${0.1 * i})`);
-            gradient.addColorStop(0.6, `rgba(255, 150, 50, ${0.05 * i})`);
-            gradient.addColorStop(1, 'rgba(255, 100, 0, 0)');
+        const angle = (i / 12) * Math.PI * 2 + time * 0.001;
+        ctx.rotate(Math.PI / 6);
             
-            ctx.fillStyle = gradient;
-            ctx.fillRect(sunX - sunRadius * 2, sunY - sunRadius * 2, sunRadius * 2, sunRadius * 4);
-        }
-        
-        // Corona solar
-        ctx.save();
-        ctx.translate(sunX, sunY);
-        for (let i = 0; i < 12; i++) {
-            const angle = (i / 12) * Math.PI * 2 + time * 0.001;
-            ctx.rotate(Math.PI / 6);
+        const coronaGrad = ctx.createRadialGradient(0, 0, sunRadius * 0.6, 0, 0, sunRadius * 1.2);
+        coronaGrad.addColorStop(0, 'rgba(255, 200, 100, 0.3)');
+        coronaGrad.addColorStop(0.5, 'rgba(255, 150, 50, 0.15)');
+        coronaGrad.addColorStop(1, 'rgba(255, 100, 0, 0)');
             
-            const coronaGrad = ctx.createRadialGradient(0, 0, sunRadius * 0.6, 0, 0, sunRadius * 1.2);
-            coronaGrad.addColorStop(0, 'rgba(255, 200, 100, 0.3)');
-            coronaGrad.addColorStop(0.5, 'rgba(255, 150, 50, 0.15)');
-            coronaGrad.addColorStop(1, 'rgba(255, 100, 0, 0)');
-            
-            ctx.fillStyle = coronaGrad;
-            ctx.beginPath();
-            ctx.moveTo(0, 0);
-            ctx.lineTo(sunRadius * 1.5, -sunRadius * 0.3);
-            ctx.lineTo(sunRadius * 1.5, sunRadius * 0.3);
-            ctx.closePath();
-            ctx.fill();
-        }
-        ctx.restore();
-        
-        // Cuerpo del sol
-        const sunGradient = ctx.createRadialGradient(sunX - sunRadius * 0.2, sunY - sunRadius * 0.2, 0, sunX, sunY, sunRadius);
-        sunGradient.addColorStop(0, '#FFFEF0');
-        sunGradient.addColorStop(0.3, '#FFF4D0');
-        sunGradient.addColorStop(0.5, '#FFD700');
-        sunGradient.addColorStop(0.7, '#FFA500');
-        sunGradient.addColorStop(0.9, '#FF8C00');
-        sunGradient.addColorStop(1, '#FF6600');
-        
-        ctx.fillStyle = sunGradient;
+        ctx.fillStyle = coronaGrad;
         ctx.beginPath();
-        ctx.arc(sunX, sunY, sunRadius, 0, Math.PI * 2);
+        ctx.moveTo(0, 0);
+        ctx.lineTo(sunRadius * 1.5, -sunRadius * 0.3);
+        ctx.lineTo(sunRadius * 1.5, sunRadius * 0.3);
+        ctx.closePath();
         ctx.fill();
+    }
+    ctx.restore();
         
-        // Manchas solares
-        ctx.fillStyle = 'rgba(200, 100, 0, 0.3)';
-        for (let i = 0; i < 8; i++) {
-            const spotAngle = (i / 8) * Math.PI * 2 + time * 0.0005;
-            const spotDist = sunRadius * (0.3 + Math.sin(time * 0.001 + i) * 0.2);
-            const spotX = sunX + Math.cos(spotAngle) * spotDist;
-            const spotY = sunY + Math.sin(spotAngle) * spotDist;
-            const spotSize = 20 + Math.sin(time * 0.002 + i) * 10;
+    // Cuerpo del sol
+    const sunGradient = ctx.createRadialGradient(sunX - sunRadius * 0.2, sunY - sunRadius * 0.2, 0, sunX, sunY, sunRadius);
+    sunGradient.addColorStop(0, '#FFFEF0');
+    sunGradient.addColorStop(0.3, '#FFF4D0');
+    sunGradient.addColorStop(0.5, '#FFD700');
+    sunGradient.addColorStop(0.7, '#FFA500');
+    sunGradient.addColorStop(0.9, '#FF8C00');
+    sunGradient.addColorStop(1, '#FF6600');
+        
+    ctx.fillStyle = sunGradient;
+    ctx.beginPath();
+    ctx.arc(sunX, sunY, sunRadius, 0, Math.PI * 2);
+    ctx.fill();
+        
+    // Manchas solares
+    ctx.fillStyle = 'rgba(200, 100, 0, 0.3)';
+    for (let i = 0; i < 8; i++) {
+        const spotAngle = (i / 8) * Math.PI * 2 + time * 0.0005;
+        const spotDist = sunRadius * (0.3 + Math.sin(time * 0.001 + i) * 0.2);
+        const spotX = sunX + Math.cos(spotAngle) * spotDist;
+        const spotY = sunY + Math.sin(spotAngle) * spotDist;
+        const spotSize = 20 + Math.sin(time * 0.002 + i) * 10;
             
+        ctx.beginPath();
+        ctx.arc(spotX, spotY, spotSize, 0, Math.PI * 2);
+        ctx.fill();
+    }
+}
+    
+// Función para dibujar la nebulosa
+function drawNebula() {
+    nebula.forEach(n => {
+        ctx.fillStyle = n.color + n.opacity + ')';
+        ctx.beginPath();
+        ctx.arc(n.x, n.y, n.size, 0, Math.PI * 2);
+        ctx.fill();
+            
+        n.x += n.speedX;
+        n.y += n.speedY;
+            
+        if (n.x < 0) n.x = canvas.width;
+        if (n.x > canvas.width) n.x = 0;
+        if (n.y < 0) n.y = canvas.height;
+        if (n.y > canvas.height) n.y = 0;
+    });
+}
+    
+// Función para dibujar las estrellas
+function drawStars() {
+    stars.forEach(star => {
+        star.twinklePhase += star.twinkleSpeed;
+        const twinkle = Math.sin(star.twinklePhase) * 0.3 + 0.7;
+            
+        ctx.fillStyle = `rgba(255, 255, 255, ${star.opacity * twinkle})`;
+        ctx.beginPath();
+        ctx.arc(star.x, star.y, star.radius, 0, Math.PI * 2);
+        ctx.fill();
+            
+        if (star.radius > 1.5) {
+            ctx.fillStyle = `rgba(255, 255, 255, ${star.opacity * twinkle * 0.5})`;
             ctx.beginPath();
-            ctx.arc(spotX, spotY, spotSize, 0, Math.PI * 2);
+            ctx.arc(star.x, star.y, star.radius * 2, 0, Math.PI * 2);
             ctx.fill();
         }
-    }
+    });
+}
     
-    // Función para dibujar la nebulosa
-    function drawNebula() {
-        nebula.forEach(n => {
-            ctx.fillStyle = n.color + n.opacity + ')';
-            ctx.beginPath();
-            ctx.arc(n.x, n.y, n.size, 0, Math.PI * 2);
-            ctx.fill();
-            
-            n.x += n.speedX;
-            n.y += n.speedY;
-            
-            if (n.x < 0) n.x = canvas.width;
-            if (n.x > canvas.width) n.x = 0;
-            if (n.y < 0) n.y = canvas.height;
-            if (n.y > canvas.height) n.y = 0;
-        });
-    }
-    
-    // Función para dibujar las estrellas
-    function drawStars() {
-        stars.forEach(star => {
-            star.twinklePhase += star.twinkleSpeed;
-            const twinkle = Math.sin(star.twinklePhase) * 0.3 + 0.7;
-            
-            ctx.fillStyle = `rgba(255, 255, 255, ${star.opacity * twinkle})`;
-            ctx.beginPath();
-            ctx.arc(star.x, star.y, star.radius, 0, Math.PI * 2);
-            ctx.fill();
-            
-            if (star.radius > 1.5) {
-                ctx.fillStyle = `rgba(255, 255, 255, ${star.opacity * twinkle * 0.5})`;
-                ctx.beginPath();
-                ctx.arc(star.x, star.y, star.radius * 2, 0, Math.PI * 2);
-                ctx.fill();
-            }
-        });
-    }
-    
-    // Función para dibujar meteoritos
-    function drawMeteorite(met) {
-        ctx.save();
-        ctx.translate(met.x, met.y);
-        ctx.rotate(met.rotation);
+// Función para dibujar meteoritos
+function drawMeteorite(met) {
+    ctx.save();
+    ctx.translate(met.x, met.y);
+    ctx.rotate(met.rotation);
         
-        const meteorGrad = ctx.createRadialGradient(-met.size * 0.3, -met.size * 0.3, 0, 0, 0, met.size);
-        if (met.color > 0.5) {
-            meteorGrad.addColorStop(0, '#A0826D');
-            meteorGrad.addColorStop(0.5, '#6B5445');
-            meteorGrad.addColorStop(1, '#3E2723');
+    const meteorGrad = ctx.createRadialGradient(-met.size * 0.3, -met.size * 0.3, 0, 0, 0, met.size);
+    if (met.color > 0.5) {
+        meteorGrad.addColorStop(0, '#A0826D');
+        meteorGrad.addColorStop(0.5, '#6B5445');
+        meteorGrad.addColorStop(1, '#3E2723');
+    } else {
+        meteorGrad.addColorStop(0, '#8B7D6B');
+        meteorGrad.addColorStop(0.5, '#5C5147');
+        meteorGrad.addColorStop(1, '#2E2620');
+    }
+        
+    ctx.fillStyle = meteorGrad;
+    ctx.beginPath();
+    ctx.arc(0, 0, met.size, 0, Math.PI * 2);
+    ctx.fill();
+        
+    ctx.fillStyle = 'rgba(0, 0, 0, 0.4)';
+    for (let i = 0; i < 3; i++) {
+        ctx.beginPath();
+        ctx.arc(
+            (Math.sin(i) * met.size * 0.3),
+            (Math.cos(i) * met.size * 0.3),
+            met.size * 0.15,
+            0, Math.PI * 2
+        );
+        ctx.fill();
+    }
+        
+    ctx.restore();
+        
+    // Estela del meteorito
+    const trailLength = 80;
+    for (let i = 0; i < 3; i++) {
+        const offset = i * 8;
+        const trailGrad = ctx.createLinearGradient(
+            met.x, met.y,
+            met.x - Math.cos(met.angle) * (trailLength + offset),
+            met.y - Math.sin(met.angle) * (trailLength + offset)
+        );
+            
+        if (i === 0) {
+            trailGrad.addColorStop(0, 'rgba(255, 255, 200, 0.9)');
+            trailGrad.addColorStop(0.3, 'rgba(255, 200, 100, 0.7)');
+        } else if (i === 1) {
+            trailGrad.addColorStop(0, 'rgba(255, 180, 100, 0.7)');
+            trailGrad.addColorStop(0.3, 'rgba(255, 120, 50, 0.5)');
         } else {
-            meteorGrad.addColorStop(0, '#8B7D6B');
-            meteorGrad.addColorStop(0.5, '#5C5147');
-            meteorGrad.addColorStop(1, '#2E2620');
+            trailGrad.addColorStop(0, 'rgba(255, 100, 50, 0.5)');
+            trailGrad.addColorStop(0.3, 'rgba(255, 50, 0, 0.3)');
         }
-        
-        ctx.fillStyle = meteorGrad;
+        trailGrad.addColorStop(1, 'rgba(255, 0, 0, 0)');
+            
+        ctx.strokeStyle = trailGrad;
+        ctx.lineWidth = met.size * (1.2 - i * 0.3);
+        ctx.lineCap = 'round';
         ctx.beginPath();
-        ctx.arc(0, 0, met.size, 0, Math.PI * 2);
+        ctx.moveTo(met.x, met.y);
+        ctx.lineTo(
+            met.x - Math.cos(met.angle) * (trailLength + offset),
+            met.y - Math.sin(met.angle) * (trailLength + offset)
+        );
+        ctx.stroke();
+    }
+        
+    // Partículas de la estela
+    for (let i = 0; i < 5; i++) {
+        const dist = Math.random() * trailLength;
+        const px = met.x - Math.cos(met.angle) * dist + (Math.random() - 0.5) * 15;
+        const py = met.y - Math.sin(met.angle) * dist + (Math.random() - 0.5) * 15;
+            
+        ctx.fillStyle = `rgba(255, ${150 + Math.random() * 100}, 0, ${Math.random() * 0.6})`;
+        ctx.beginPath();
+        ctx.arc(px, py, Math.random() * 3 + 1, 0, Math.PI * 2);
         ctx.fill();
-        
-        ctx.fillStyle = 'rgba(0, 0, 0, 0.4)';
-        for (let i = 0; i < 3; i++) {
-            ctx.beginPath();
-            ctx.arc(
-                (Math.sin(i) * met.size * 0.3),
-                (Math.cos(i) * met.size * 0.3),
-                met.size * 0.15,
-                0, Math.PI * 2
-            );
-            ctx.fill();
-        }
-        
-        ctx.restore();
-        
-        // Estela del meteorito
-        const trailLength = 80;
-        for (let i = 0; i < 3; i++) {
-            const offset = i * 8;
-            const trailGrad = ctx.createLinearGradient(
-                met.x, met.y,
-                met.x - Math.cos(met.angle) * (trailLength + offset),
-                met.y - Math.sin(met.angle) * (trailLength + offset)
-            );
-            
-            if (i === 0) {
-                trailGrad.addColorStop(0, 'rgba(255, 255, 200, 0.9)');
-                trailGrad.addColorStop(0.3, 'rgba(255, 200, 100, 0.7)');
-            } else if (i === 1) {
-                trailGrad.addColorStop(0, 'rgba(255, 180, 100, 0.7)');
-                trailGrad.addColorStop(0.3, 'rgba(255, 120, 50, 0.5)');
-            } else {
-                trailGrad.addColorStop(0, 'rgba(255, 100, 50, 0.5)');
-                trailGrad.addColorStop(0.3, 'rgba(255, 50, 0, 0.3)');
-            }
-            trailGrad.addColorStop(1, 'rgba(255, 0, 0, 0)');
-            
-            ctx.strokeStyle = trailGrad;
-            ctx.lineWidth = met.size * (1.2 - i * 0.3);
-            ctx.lineCap = 'round';
-            ctx.beginPath();
-            ctx.moveTo(met.x, met.y);
-            ctx.lineTo(
-                met.x - Math.cos(met.angle) * (trailLength + offset),
-                met.y - Math.sin(met.angle) * (trailLength + offset)
-            );
-            ctx.stroke();
-        }
-        
-        // Partículas de la estela
-        for (let i = 0; i < 5; i++) {
-            const dist = Math.random() * trailLength;
-            const px = met.x - Math.cos(met.angle) * dist + (Math.random() - 0.5) * 15;
-            const py = met.y - Math.sin(met.angle) * dist + (Math.random() - 0.5) * 15;
-            
-            ctx.fillStyle = `rgba(255, ${150 + Math.random() * 100}, 0, ${Math.random() * 0.6})`;
-            ctx.beginPath();
-            ctx.arc(px, py, Math.random() * 3 + 1, 0, Math.PI * 2);
-            ctx.fill();
-        }
     }
+}
     
-    // Función de animación principal
-    function animate() {
-        time = Date.now() - startTime;
+// Función de animación principal
+function animate() {
+    time = Date.now() - startTime;
         
-        // Fondo degradado
-        const bgGrad = ctx.createRadialGradient(canvas.width / 2, canvas.height / 2, 0, canvas.width / 2, canvas.height / 2, canvas.width);
-        bgGrad.addColorStop(0, '#0a0a2e');
-        bgGrad.addColorStop(0.5, '#050515');
-        bgGrad.addColorStop(1, '#000000');
-        ctx.fillStyle = bgGrad;
-        ctx.fillRect(0, 0, canvas.width, canvas.height);
+    // Fondo degradado
+    const bgGrad = ctx.createRadialGradient(canvas.width / 2, canvas.height / 2, 0, canvas.width / 2, canvas.height / 2, canvas.width);
+    bgGrad.addColorStop(0, '#0a0a2e');
+    bgGrad.addColorStop(0.5, '#050515');
+    bgGrad.addColorStop(1, '#000000');
+    ctx.fillStyle = bgGrad;
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
         
-        drawNebula();
-        drawStars();
-        drawSun();
+    drawNebula();
+    drawStars();
+    drawSun();
         
-        // Actualizar y dibujar meteoritos
-        meteorites.forEach(met => {
-            met.x += Math.cos(met.angle) * met.speed;
-            met.y += Math.sin(met.angle) * met.speed;
-            met.rotation += met.rotationSpeed;
+    // Actualizar y dibujar meteoritos
+    meteorites.forEach(met => {
+        met.x += Math.cos(met.angle) * met.speed;
+        met.y += Math.sin(met.angle) * met.speed;
+        met.rotation += met.rotationSpeed;
             
-            if (met.x > canvas.width * 0.7 || met.y > canvas.height + 100) {
-                met.x = Math.random() * canvas.width * 0.3;
-                met.y = -Math.random() * 300 - 100;
-                met.rotation = Math.random() * Math.PI * 2;
-            }
+        if (met.x > canvas.width * 0.7 || met.y > canvas.height + 100) {
+            met.x = Math.random() * canvas.width * 0.3;
+            met.y = -Math.random() * 300 - 100;
+            met.rotation = Math.random() * Math.PI * 2;
+        }
             
-            drawMeteorite(met);
-        });
+        drawMeteorite(met);
+    });
         
-        requestAnimationFrame(animate);
-    }
+    requestAnimationFrame(animate);
+}
     
-    // Navegación entre pantallas
-    const introScreen = document.getElementById('intro-screen');
-    const charactersScreen = document.getElementById('characters-screen');
-    const storyScreen = document.getElementById('story-screen');
-    const textBox = document.getElementById('text-box');
+// Navegación entre pantallas
+const introScreen = document.getElementById('intro-screen');
+const charactersScreen = document.getElementById('characters-screen');
+const storyScreen = document.getElementById('story-screen');
+const textBox = document.getElementById('text-box');
     
-    textBox.addEventListener('click', () => {
-        introScreen.classList.remove('active');
-        charactersScreen.classList.add('active');
+textBox.addEventListener('click', () => {
+    introScreen.classList.remove('active');
+    charactersScreen.classList.add('active');
+});
+    
+// Event listeners para los personajes
+const characterCards = document.querySelectorAll('.character-card');
+characterCards.forEach(card => {
+    card.addEventListener('click', () => {
+        const charKey = card.getAttribute('data-character');
+        const charName = card.getAttribute('data-name');
+        const charImg = card.getAttribute('data-img');
+    
+        document.getElementById('story-char-name').textContent = charName;
+        document.getElementById('story-char-img').src = charImg;
+        document.getElementById('story-content').textContent = historias[charKey];
+        document.getElementById('story-content').setAttribute('data-current', charKey);
+    
+        charactersScreen.classList.remove('active');
+        storyScreen.classList.add('active');
     });
+});
     
-    // Event listeners para los personajes
-    const characterCards = document.querySelectorAll('.character-card');
-    characterCards.forEach(card => {
-        card.addEventListener('click', () => {
-            const charKey = card.getAttribute('data-character');
-            const charName = card.getAttribute('data-name');
-            const charImg = card.getAttribute('data-img');
+// Botón de volver
+document.getElementById('back-btn').addEventListener('click', () => {
+    storyScreen.classList.remove('active');
+    charactersScreen.classList.add('active');
+});
     
-            document.getElementById('story-char-name').textContent = charName;
-            document.getElementById('story-char-img').src = charImg;
-            document.getElementById('story-content').textContent = historias[charKey];
-            document.getElementById('story-content').setAttribute('data-current', charKey);
-    
-            charactersScreen.classList.remove('active');
-            storyScreen.classList.add('active');
-        });
-    });
-    
-    // Botón de volver
-    document.getElementById('back-btn').addEventListener('click', () => {
-        storyScreen.classList.remove('active');
-        charactersScreen.classList.add('active');
-    });
-    
-    // Editar historia al hacer clic
-    document.getElementById('story-content').addEventListener('click', () => {
-        const currentChar = document.getElementById('story-content').getAttribute('data-current');
-        const nuevaHistoria = prompt("Escribe la nueva historia para " + currentChar.toUpperCase(), historias[currentChar]);
-        if (nuevaHistoria !== null) {
+// Editar historia al hacer clic
+document.getElementById('story-content').addEventListener('click', () => {
+    const currentChar = document.getElementById('story-content').getAttribute('data-current');
+    const nuevaHistoria = prompt("Escribe la nueva historia para " + currentChar.toUpperCase(), historias[currentChar]);
+    if (nuevaHistoria !== null) {
             historias[currentChar] = nuevaHistoria;
             document.getElementById('story-content').textContent = nuevaHistoria;
-        }
-    });
+    }
+});
     
-    // Iniciar animación
-    animate();
+// Iniciar animación
+animate();
