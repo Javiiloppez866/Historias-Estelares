@@ -4,291 +4,9 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Historias Estelares</title>
-    <style>
-        @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@700;900&display=swap');
-        /* === RESET & BASE === */
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
-        body {
-            margin: 0;
-            padding: 0;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            min-height: 100vh;
-            background: #000;
-            overflow: hidden;
-            font-family: 'Orbitron', Arial, sans-serif;
-        }
-
-        /* === CANVAS === */
-        #canvas {
-            position: fixed;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            border: 2px solid #333;
-            box-shadow: 0 0 50px rgba(255, 100, 0, 0.3);
-            z-index: 1;
-        }
-
-        /* === LOGO === */
-        #logo {
-            position: fixed;
-            top: 30px;
-            left: 30px;
-            width: 120px;
-            height: auto;
-            cursor: pointer;
-            transition: transform 0.3s, filter 0.3s;
-            filter: drop-shadow(0 0 20px rgba(255, 255, 255, 0.6));
-            z-index: 1000;
-        }
-
-        #logo:hover {
-            transform: scale(1.1);
-            filter: drop-shadow(0 0 30px rgba(255, 255, 255, 0.9));
-        }
-
-        /* === SCREENS === */
-        .screen {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            display: none;
-            justify-content: center;
-            align-items: center;
-            z-index: 10;
-        }
-
-        .screen.active {
-            display: flex;
-        }
-
-        /* === TEXT BOX === */
-        #text-box {
-            position: relative;
-            background: rgba(0, 10, 30, 0.85);
-            padding: 60px 80px;
-            border: 3px solid rgba(100, 200, 255, 0.6);
-            box-shadow: 0 0 30px rgba(0, 100, 255, 0.5);
-            cursor: pointer;
-            transition: all 0.3s;
-            max-width: 1000px;
-        }
-
-        #text-box:hover {
-            transform: scale(1.05);
-            box-shadow: 0 0 50px rgba(0, 150, 255, 0.8);
-            border-color: rgba(150, 220, 255, 0.9);
-        }
-
-        /* === TITLES === */
-        .title-main {
-            font-size: 56px;
-            font-weight: 900;
-            text-align: center;
-            margin-bottom: 20px;
-            background: linear-gradient(90deg, #00D9FF, #FF6B9D, #FFC837, #00D9FF);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-            text-shadow: 0 0 30px rgba(255, 100, 0, 0.5);
-        }
-
-        .title-sub {
-            font-size: 42px;
-            font-weight: 700;
-            text-align: center;
-            margin-bottom: 10px;
-            background: linear-gradient(90deg, #FFD700, #FF8C00, #FFD700);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-        }
-
-        .title-sub2 {
-            font-size: 38px;
-            font-weight: 700;
-            text-align: center;
-            background: linear-gradient(90deg, #FFD700, #FF8C00, #FFD700);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-        }
-
-        /* === CHARACTER GRID === */
-        .characters-grid {
-            display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            gap: 40px;
-            padding: 40px;
-            max-width: 1200px;
-        }
-
-        .character-card {
-            background: rgba(0, 10, 30, 0.9);
-            border: 3px solid rgba(100, 200, 255, 0.4);
-            border-radius: 20px;
-            padding: 30px;
-            cursor: pointer;
-            transition: all 0.4s;
-            text-align: center;
-            position: relative;
-            overflow: hidden;
-        }
-
-        .character-card::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: -100%;
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(90deg, transparent, rgba(100, 200, 255, 0.3), transparent);
-            transition: left 0.5s;
-        }
-
-        .character-card:hover::before {
-            left: 100%;
-        }
-
-        .character-card:hover {
-            transform: translateY(-10px) scale(1.05);
-            border-color: rgba(150, 220, 255, 0.9);
-            box-shadow: 0 20px 60px rgba(0, 150, 255, 0.6);
-        }
-
-        .character-img {
-            width: 200px;
-            height: 200px;
-            object-fit: cover;
-            border-radius: 50%;
-            margin-bottom: 20px;
-            border: 4px solid rgba(100, 200, 255, 0.5);
-            transition: all 0.3s;
-        }
-
-        .character-card:hover .character-img {
-            border-color: rgba(255, 200, 100, 0.9);
-            transform: scale(1.1);
-            box-shadow: 0 0 40px rgba(255, 200, 100, 0.6);
-        }
-
-        .character-name {
-            font-size: 32px;
-            font-weight: 900;
-            margin-bottom: 10px;
-            background: linear-gradient(90deg, #00D9FF, #FF6B9D);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-        }
-
-        .character-desc {
-            font-size: 16px;
-            color: rgba(255, 255, 255, 0.8);
-            line-height: 1.6;
-        }
-
-        /* === STORY SECTION === */
-        .story-container {
-            display: flex;
-            gap: 40px;
-            padding: 40px;
-            max-width: 1400px;
-            height: 80vh;
-            align-items: stretch;
-        }
-
-        .story-left {
-            flex: 0 0 400px;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 20px;
-        }
-
-        .story-character-img {
-            width: 100%;
-            height: 400px;
-            object-fit: cover;
-            border-radius: 20px;
-            border: 4px solid rgba(100, 200, 255, 0.6);
-            box-shadow: 0 0 40px rgba(0, 150, 255, 0.5);
-        }
-
-        .story-character-name {
-            font-size: 36px;
-            font-weight: 900;
-            text-align: center;
-            background: linear-gradient(90deg, #00D9FF, #FF6B9D);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-        }
-
-        .story-right {
-            flex: 1;
-            display: flex;
-            flex-direction: column;
-            gap: 20px;
-        }
-
-        .story-box {
-            flex: 1;
-            background: rgba(0, 10, 30, 0.9);
-            border: 3px solid rgba(100, 200, 255, 0.6);
-            border-radius: 20px;
-            padding: 30px;
-            overflow-y: auto;
-        }
-
-        .story-title {
-            font-size: 28px;
-            font-weight: 700;
-            margin-bottom: 20px;
-            background: linear-gradient(90deg, #FFD700, #FF8C00);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-        }
-
-        .story-text {
-            font-size: 18px;
-            line-height: 1.8;
-            color: rgba(255, 255, 255, 0.9);
-            cursor: pointer;
-        }
-
-        /* === BUTTONS === */
-        .back-button {
-            background: linear-gradient(135deg, #00D9FF, #0080FF);
-            border: none;
-            padding: 15px 40px;
-            font-size: 20px;
-            font-weight: 700;
-            color: white;
-            border-radius: 10px;
-            cursor: pointer;
-            transition: all 0.3s;
-            font-family: 'Orbitron', Arial, sans-serif;
-            box-shadow: 0 5px 20px rgba(0, 150, 255, 0.4);
-        }
-
-        .back-button:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 8px 30px rgba(0, 150, 255, 0.6);
-            background: linear-gradient(135deg, #00F0FF, #0090FF);
-        }
-
-    </style>
+    
+    <!-- Añadimos el CSS-->
+    <link rel="stylesheet" href="../styles/styles.css">
 </head>
 <body>
     <canvas id="canvas"></canvas>
@@ -308,22 +26,22 @@
     <div id="characters-screen" class="screen">
         <div class="characters-grid">
             <div class="character-card" data-character="astronaut" data-name="ASTRONAUTA" data-img="https://images.unsplash.com/photo-1446776653964-20c1d3a81b06?w=400&h=400&fit=crop">
-                <img class="character-img" src="astronauta.png" alt="Astronauta">
+                <img class="character-img" src="../img/astronauta.png" alt="Astronauta">
                 <div class="character-name">ASTRONAUT</div>
                 <div class="character-desc">Cosmos explorer, direct witness to solar storms in space</div>
             </div>
             <div class="character-card" data-character="farmer" data-name="AGRICULTOR" data-img="https://images.unsplash.com/photo-1625246333195-78d9c38ad449?w=400&h=400&fit=crop">
-                <img class="character-img" src="granjero.png" alt="Agricultor">
+                <img class="character-img" src="../img/granjero.png" alt="Agricultor">
                 <div class="character-name">FARMER</div>
                 <div class="character-desc">Guardian of the earth, observer of how space weather affects crops</div>
             </div>
             <div class="character-card" data-character="scientist" data-name="CIENTÍFICO" data-img="https://images.unsplash.com/photo-1507413245164-6160d8298b31?w=400&h=400&fit=crop">
-                <img class="character-img" src="cientifico.png" alt="Científico">
+                <img class="character-img" src="../img/cientifico.png" alt="Científico">
                 <div class="character-name">SCIENTIFIC</div>
                 <div class="character-desc">Universe researcher, unravelling the mysteries of space weather</div>
             </div>
             <div class="character-card" data-character="child" data-name="EXPLORADOR" data-img="https://images.unsplash.com/photo-1503454537195-1dcabb73ffb9?w=400&h=400&fit=crop">
-                <img class="character-img" src="niño.png" alt="Niño">
+                <img class="character-img" src="../img/niño.png" alt="Niño">
                 <div class="character-name">KID</div>
                 <div class="character-desc">Young dreamer, discovering the wonders of space with curious eyes</div>
             </div>
