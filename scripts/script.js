@@ -30,24 +30,13 @@ backFromAboutUsBtn.addEventListener('click', () => {
 
 const historias = {
     
-    astronaut: "Aquí .",
+    astronaut: `Soy Alex Weber, astronauta de la ESA. En mayo de 2024, estaba en la ISS, orbitando la Tierra a más de 400 km. El 9 de mayo, recibimos un aviso: una gran eyección de masa coronal (CME) se dirigía a la Tierra, provocando una tormenta geomagnética G5.
+                En la estación seguimos el protocolo: cerramos compuertas, apagamos sistemas y nos refugiamos en el módulo Zvezda. Desde allí vi auroras verdes, violetas y rosadas iluminando la Tierra, un espectáculo hermoso pero un recordatorio del poder del Sol. Durante la tormenta, algunos instrumentos se reiniciaron solos y las comunicaciones con la Tierra se interrumpieron.
+                El 11 de mayo, la tormenta disminuyó. La Tierra volvió a su calma azul y nosotros regresamos a nuestras tareas, recordando la fuerza de nuestro Sol y la fragilidad de la vida en el espacio.`,
     
-    farmer: `My name is Julián Ortega. I am 47 years old, have two children and a small farm in the central highlands. All my life I have grown fruit and vegetables: tomatoes, lettuce, sweetcorn. I learned to farm by watching my father, but over the years, agriculture has changed. Now everything is controlled by humidity sensors, automated irrigation systems, drones for spraying, and GPS for measuring the land.
-            I adapted too. I couldn't fall behind. I bought a smart irrigation system connected to a satellite, used digital weather forecasts, and programmed everything from a tablet.
-            And for a while, it worked. My harvests were more efficient, my work lighter. Until the solar storm hit.
-            It was October, just like now. The sunrise was tinged with a strange reddish colour, as if the sky were silently burning. I didn't think much of it. I thought it was a beautiful sunrise. But at noon, my phone sounded an alert:
-            G4 geomagnetic storm. Potential impact on electrical networks and GPS systems. Source: NASA Space Weather Prediction Centre.
-            I didn't quite understand. 'That'll be up there,' I thought. 'In the satellites, in the rockets, not here in the countryside.' But within hours, everything stopped. The irrigation system stopped working, the weather station wasn't transmitting data, the tractor's GPS was out of sync, I tried to reconnect it and nothing.
-            The solar-powered water pump began to fail. The electric inverters shut down intermittently.
-            In the afternoon, the sky was covered with green and violet lights, a beautiful aurora borealis. But it was also a reminder that something was wrong.
-            On the third day, the plants began to suffer. Without irrigation, the soil hardened. The leaves withered. Some sensors were burned out by electrical surges. I tried to do it manually, with buckets and hoses, but the farm is large. You can't water everything by hand. The tomatoes cracked, the lettuce burned. Months of effort were lost under an unrelenting sun. Meanwhile, at home, things weren't going well either. Without stable electricity, food was spoiling. My daughter couldn't attend virtual classes. The bank called about the debt for the new equipment. There was nothing to do but wait for the Sun to calm down, then I read the NASA reports.
-            A coronal mass ejection had reached Earth. A cloud of charged particles hit the planet's magnetic field, disrupting electrical networks, GPS signals, and satellites.
-            Experts called it 'an extreme but not unusual event.' They said it could happen again. That the Sun was entering its solar maximum, a natural cycle of high activity that occurs every 11 years.
-            For them, it was technical data. For me, it was the end of a harvest, the end of a season, almost the end of my farm.
-            Today, months later, I continue to salvage what I can. I have gone back to basics, to the beginning: manual irrigation, observing the sky, intuition. But nothing is the same anymore.
-            I live with the uncertainty that, far from here, an invisible storm could destroy my work in seconds.
-            I look at the sun and I don't know whether to thank it or fear it. I know that without it there would be no life. But I also know that when it rages, those of us who live off the land pay the price. And in this new world, where everything depends on technology and an unpredictable sky, farmers like me no longer fear only drought or rain...
-            Now we also fear the sun.` ,
+    farmer: `I'm Julián Ortega, a 47-year-old farmer with two children. I adapted my small highland farm to modern technology: smart irrigation, GPS tractors, and digital forecasts.
+            One October, a solar storm hit. Alerts warned of electrical and GPS disruptions—but I didn't expect it to reach my farm. Within hours, systems failed, sensors burned out, and crops began to suffer. Months of work were lost, and at home, electricity failures spoiled food and disrupted my daughter’s classes.
+            NASA called it a coronal mass ejection, part of the Sun's natural cycle. For me, it was devastation. Now, I've returned to manual farming, but I live with uncertainty: in our tech-dependent world, farmers no longer fear only drought or rain… we also fear the sun..`,
     
     scientist: `Hello, I'm Lukas Heinemann, a space weather scientist in Potsdam, Germany. My job is to study how the Sun influences our planet. Sometimes it gives us light and heat, but other times... it throws storms at us.
                 On 10 May 2024, NASA and ESA warned of something unusual:
@@ -59,11 +48,19 @@ const historias = {
                 We can observe the Sun, but we cannot control it, and every time the sun rises, I remember that day when the Sun danced over Germany and taught us to respect its power.`,
 
 
-    kid: "Aqui."
-
-
+    kid: ``
 
 };
+
+// Botón Saber más → abre la URL en nueva pestaña
+const linkButtons = document.querySelectorAll('.story-link-btn');
+
+linkButtons.forEach(btn => {
+    btn.addEventListener('click', () => {
+        const url = btn.getAttribute('data-url');
+        window.open(url, '_blank');
+    });
+});
 
 // Botón de volver atrás
 document.getElementById('back-to-intro-btn').addEventListener('click', () => {

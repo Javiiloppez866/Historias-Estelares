@@ -367,3 +367,27 @@ body {
     box-shadow: 0 8px 30px rgba(0, 150, 255, 0.6);
     background: linear-gradient(135deg, #00F0FF, #0090FF);
 }
+
+/* === BOTÓN SABER MÁS STORY SCREEN === */
+.story-link-btn {
+    width: 100%;
+    padding: 12px 20px;
+    margin-top: 20px; /* Separación del texto */
+    font-size: 18px;
+    font-weight: 700;
+    color: white;
+    background: linear-gradient(135deg, #00D9FF, #0080FF);
+    border: none;
+    border-radius: 10px;
+    cursor: pointer;
+    text-align: center;
+    transition: all 0.3s;
+    box-shadow: 0 5px 20px rgba(0, 150, 255, 0.4);
+    font-family: 'Orbitron', Arial, sans-serif;
+}
+
+.story-link-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 30px rgba(0, 150, 255, 0.6);
+    background: linear-gradient(135deg, #00F0FF, #0090FF);
+}
