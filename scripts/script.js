@@ -3,6 +3,28 @@ const canvas = document.getElementById('canvas');
 const ctx = canvas.getContext('2d');
 canvas.width = 1920;
 canvas.height = 1080;
+
+// Botón About Us
+const aboutUsBtn = document.getElementById('about-us-btn');
+const aboutUsScreen = document.getElementById('about-us-screen');
+
+aboutUsBtn.addEventListener('click', () => {
+    introScreen.classList.remove('active');
+    aboutUsScreen.classList.add('active');
+});
+
+// Botón para volver desde About Us al Intro 
+const backFromAboutUsBtn = document.createElement('button');
+backFromAboutUsBtn.textContent = "Back";
+backFromAboutUsBtn.classList.add('back-button');
+backFromAboutUsBtn.style.marginTop = "20px";
+document.querySelector('.about-us-text').appendChild(backFromAboutUsBtn);
+
+backFromAboutUsBtn.addEventListener('click', () => {
+    aboutUsScreen.classList.remove('active');
+    introScreen.classList.add('active');
+});
+
     
 // Historias individuales por personaje.
 
@@ -34,7 +56,13 @@ const historias = {
                 'Dad, the sky is dancing!' my children shouted.
                 Yes... it was the Northern Lights, something almost impossible in Germany, but at the same time, GPS systems were failing, satellites were out of sync, and power grids in the north were experiencing fluctuations.
                 Even farmers in Bavaria had to water by hand. Their automatic systems stopped working. The Sun, beautiful and powerful, was touching the Earth's magnetic field. For three days, the auroras were seen as far away as France, Italy and Spain, and when everything returned to normal, I understood something:
-                We can observe the Sun, but we cannot control it, and every time the sun rises, I remember that day when the Sun danced over Germany and taught us to respect its power.`
+                We can observe the Sun, but we cannot control it, and every time the sun rises, I remember that day when the Sun danced over Germany and taught us to respect its power.`,
+
+
+    kid: "Aqui."
+
+
+
 };
 
 // Botón de volver atrás
